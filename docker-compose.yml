@@ -2,17 +2,11 @@
 
 services:
   zap:
-    build:
-      context: .
-      dockerfile: Dockerfile.zap
-    container_name: zap_app
+    image: zap
     ports:
       - "8080:8080"
     volumes:
-      - zap_data:/zap/wrkdir
-    environment:
-      - ZAP_PORT=8080
-    command: zap.sh -daemon -port 8080 -host 0.0.0.0
+      - ./zap.conf:/zap/conf/zap.conf
 
 
   juiceshop:
