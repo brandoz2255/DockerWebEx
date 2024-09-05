@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  web-tools:
+    build: .
+    container_name: web_exploitation_tools
+    volumes:
+      - ./docs:/opt/web-exploitation-tools/docs
+    tty: true
+
+  juice-shop:
+    image: bkimminich/juice-shop
+    container_name: juice_shop
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: "production"
+    volumes:
+      - ./juice-shop-docs:/opt/juice-shop-docs
+    restart: unless-stopped
+
