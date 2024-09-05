@@ -1,0 +1,19 @@
+FROM golang:1.16-alpine AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod download
+
+RUN go build -o ffuf
+
+FROM alpine:latest
+
+WORKDIR /root
+
+COPY --from=builder /app/ffuf /root/
+
+EXPOSE 8080
+
+CMD ["/root/ffuf"]

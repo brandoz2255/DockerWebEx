@@ -1,21 +1,54 @@
-version: '3'
+
 
 services:
-  web-tools:
-    build: .
-    container_name: web_exploitation_tools
+  zap:
+    build:
+      context: .
+      dockerfile: Dockerfile.zap
+    container_name: zap_app
+    ports:
+      - "8080:8080"
     volumes:
-      - ./docs:/opt/web-exploitation-tools/docs
-    tty: true
+      - zap_data:/zap/wrkdir
+    environment:
+      - ZAP_PORT=8080
+    command: zap.sh -daemon -port 8080 -host 0.0.0.0
 
-  juice-shop:
+
+  juiceshop:
     image: bkimminich/juice-shop
-    container_name: juice_shop
     ports:
       - "3000:3000"
-    environment:
-      NODE_ENV: "production"
     volumes:
-      - ./juice-shop-docs:/opt/juice-shop-docs
-    restart: unless-stopped
+      - juiceshop_data:/app/data
 
+  ffuf:
+    build:
+      context: .
+      dockerfile: Dockerfile.ffuf
+    command: http://juiceshop:3000
+    volumes:
+      - ./ffuf_reports:/root/reports
+
+  web-tools:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./web-tools_docs:/opt/web-exploitation-tools/docs
+      - ./juice-shop-docs:/opt/web-exploitation-tools/juice-shop-docs
+
+  run_script:
+    build:
+      context: .
+      dockerfile: Dockerfile.run_script
+    volumes:
+      - ./scripts:/scripts
+
+volumes:
+  zap_data:
+  juiceshop_data:
+  ffuf_reports:
+  web-tools_docs:
