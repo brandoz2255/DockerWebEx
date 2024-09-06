@@ -1,13 +1,25 @@
 
 
 services:
+  burpsuite:
+    build:
+      context: .
+      dockerfile: Dockerfile.burp
+    command: burpsuite
+    volumes:
+      - ./burpsuite:/opt/burpsuite
+
   zap:
-    image: zap
+    build:
+      context: .
+      dockerfile: Dockerfile.zap
+    command: zap
     ports:
       - "8080:8080"
     volumes:
       - ./zap.conf:/zap/conf/zap.conf
 
+        
 
   juiceshop:
     image: bkimminich/juice-shop

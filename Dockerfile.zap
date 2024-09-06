@@ -19,7 +19,7 @@ RUN wget --no-check-certificate -O jdk-8u211-linux-x64.tar.gz https://download.o
 
 # Install ZAP
 RUN wget -O zap.sh https://raw.githubusercontent.com/zaproxy/zaproxy-community/master/docker/zap.sh \
-    && chmod +x zap.sh \
+    && chmod +x zap.sh
     && /usr/local/jdk/bin/java -jar /zap.sh -install
 
 # Set the working directory
@@ -28,6 +28,11 @@ WORKDIR /opt/zap
 # Copy ZAP configuration
 COPY zap.conf /opt/zap/conf/zap.conf
 
-# Default command to run when the container starts
-CMD ["/usr/local/jdk/bin/java", "-jar", "/zap.sh", "-daemon", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true"]
+# envirement variables for ZAP 
+ENV ZAP_HOME=opt/home
+ENV PATH=$PATH:ZAP_HOME/bin
 
+# Default command to run when the container
+
+
+CMD ["zap", "-daemon", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true"]

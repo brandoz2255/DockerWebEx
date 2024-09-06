@@ -1,0 +1,29 @@
+FROM ubuntu:20.04
+
+# installs the applications we need and dependencies 
+
+RUN  apt-get update && apt-get install -y \
+    wget \
+    curl \
+    git \
+    python3-pip \
+    build-essential \
+    default-jre \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install BurpSuite Community
+RUN wget -O burpsuite_community.jar https://portswigger.net/burp/releases/community-2023-1/BurpSuiteCommunity_2023-1-1_Java.jar \
+    && mkdir -p /opt/burpsuite \
+    && cp burpsuite_community.jar /opt/burpsuite/
+
+# Set the working directory
+WORKDIR /opt/burpsuite
+
+# Set environment variables for BurpSuite
+ENV BURPSUITE_HOME=/opt/burpsuite
+ENV PATH=$PATH:$BURPSUITE_HOME
+
+# default commands to run the container
+
+CMD ["burpsuite_community.jar","-insecure","-trust"]
