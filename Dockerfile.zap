@@ -7,20 +7,14 @@ RUN apt-get update && apt-get install -y \
     git \
     python3-pip \
     build-essential \
-    default-jre \
+    openjdk-8-jdk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Java
-RUN wget --no-check-certificate -O jdk-8u211-linux-x64.tar.gz https://download.oracle.com/tech-network/java/javase/8u211-later/jdk-8u211-linux-x64.tar.gz \
-    && tar xzvf jdk-8u211-linux-x64.tar.gz -C /usr/local \
-    && mv /usr/local/jdk1.8.0_211 /usr/local/jdk \
-    && rm jdk-8u211-linux-x64.tar.gz
-
-# Install ZAP
+# Install ZAP (Zed Attack Proxy)
 RUN wget -O zap.sh https://raw.githubusercontent.com/zaproxy/zaproxy-community/master/docker/zap.sh \
-    && chmod +x zap.sh
-    && /usr/local/jdk/bin/java -jar /zap.sh -install
+    && chmod +x zap.sh \
+    && ./zap.sh -install
 
 # Set the working directory
 WORKDIR /opt/zap
@@ -28,11 +22,6 @@ WORKDIR /opt/zap
 # Copy ZAP configuration
 COPY zap.conf /opt/zap/conf/zap.conf
 
-# envirement variables for ZAP 
-ENV ZAP_HOME=opt/home
-ENV PATH=$PATH:ZAP_HOME/bin
+# Default command to run ZAP
+CMD ["sh", "/zap.sh", "-daemon", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true"]
 
-# Default command to run when the container
-
-
-CMD ["zap", "-daemon", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true"]

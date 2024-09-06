@@ -1,8 +1,8 @@
+# Use Ubuntu base image
 FROM ubuntu:20.04
 
-# installs the applications we need and dependencies 
-
-RUN  apt-get update && apt-get install -y \
+# Install required packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     curl \
     git \
@@ -12,10 +12,8 @@ RUN  apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install BurpSuite Community
-RUN wget -O burpsuite_community.jar https://portswigger.net/burp/releases/community-2023-1/BurpSuiteCommunity_2023-1-1_Java.jar \
-    && mkdir -p /opt/burpsuite \
-    && cp burpsuite_community.jar /opt/burpsuite/
+# Download and install BurpSuite Community Edition
+RUN wget -O /opt/burpsuite/burpsuite_community.jar https://portswigger.net/burp/releases/community-2023-1/BurpSuiteCommunity_2023-1-1_Java.jar
 
 # Set the working directory
 WORKDIR /opt/burpsuite
@@ -24,6 +22,6 @@ WORKDIR /opt/burpsuite
 ENV BURPSUITE_HOME=/opt/burpsuite
 ENV PATH=$PATH:$BURPSUITE_HOME
 
-# default commands to run the container
+# Default command to run BurpSuite
+CMD ["java", "-jar", "burpsuite_community.jar", "--insecure", "--trust"]
 
-CMD ["burpsuite_community.jar","-insecure","-trust"]
