@@ -1,23 +1,23 @@
 
 
 services:
-  burpsuite:
-    build:
-      context: .
-      dockerfile: Dockerfile.burp
-    command: burpsuite
-    volumes:
-      - ./burpsuite:/opt/burpsuite
+  #burpsuite:
+    #build:
+      #context: .
+      #dockerfile: Dockerfile.burp
+    #command: burpsuite
+   # volumes:
+      #- ./burpsuite:/opt/burpsuite
 
-  zap:
-    build:
-      context: .
-      dockerfile: Dockerfile.zap
-    command: zap
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./zap.conf:/zap/conf/zap.conf
+  #zap:
+    #build:
+      #context: .
+      #dockerfile: Dockerfile.zap
+    #command: zap
+    #ports:
+      #- "8080:8080"
+    #volumes:
+      #- ./zap.conf:/zap/conf/zap.conf
 
         
 
@@ -28,33 +28,33 @@ services:
     volumes:
       - juiceshop_data:/app/data
 
-  ffuf:
-    build:
-      context: .
-      dockerfile: Dockerfile.ffuf
-    command: http://juiceshop:3000
-    volumes:
-      - ./ffuf_reports:/root/reports
+  #ffuf:
+    #build:
+      #context: .
+      #dockerfile: Dockerfile.ffuf
+    #command: http://juiceshop:3000
+    #volumes:
+      #- ./ffuf_reports:/root/reports
 
-  web-tools:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./web-tools_docs:/opt/web-exploitation-tools/docs
-      - ./juice-shop-docs:/opt/web-exploitation-tools/juice-shop-docs
+  #web-tools:
+    #build:
+      #context: .
+      #dockerfile: Dockerfile
+    #ports:
+      #- "8080:8080"
+    #volumes:
+      #- ./web-tools_docs:/opt/web-exploitation-tools/docs
+      #- ./juice-shop-docs:/opt/web-exploitation-tools/juice-shop-docs
 
-  run_script:
-    build:
-      context: .
-      dockerfile: Dockerfile.run_script
-    volumes:
-      - ./scripts:/scripts
+  #run_script:
+    #build:
+      #context: .
+      #dockerfile: Dockerfile.run_script
+    #volumes:
+      #- ./scripts:/scripts
 
-volumes:
-  zap_data:
-  juiceshop_data:
-  ffuf_reports:
-  web-tools_docs:
+#volumes:
+  #zap_data:
+  #juiceshop_data:
+  #ffuf_reports:
+  #web-tools_docs:
